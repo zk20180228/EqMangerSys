@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkhv.user.dao.UserMapper" >
+  <resultMap id="UserResultMap" type="com.zkhv.user.entity.User" >
+    <id column="user_id" property="uid" jdbcType="VARCHAR" />
+    <result column="user_name" property="uname" jdbcType="VARCHAR" />
+    <result column="user_account" property="uaccount" jdbcType="VARCHAR" />
+    <result column="user_password" property="upwd" jdbcType="VARCHAR" />
+    <result column="user_state" property="ustate" jdbcType="VARCHAR" />
+  	<result column="user_sex" property="user_sex" jdbcType="VARCHAR" />
+  	<result column="del_flg" property="del_flg" />
+  </resultMap>
+  
+	 <select id="selectByPrimaryKey" resultMap="UserResultMap" parameterType="java.lang.String" >
+	    select 
+	    *
+	    from T_USER
+	    where user_id = #{uid,jdbcType=VARCHAR}
+	 </select>
+	 
+	   <select id="findAll" resultMap="UserResultMap" >
+    		select * from T_USER WHERE user_account !='Root'
+  	   </select>
+  
+	 
+	<!-- 根据账户名查询是否存在 -->
+    <select id="checkUserByAccount" parameterType="User" resultType="int">
+    
+  	 SELECT count(1) FROM T_USER 
+  	 <where >
+  	 	<if test="uid !=null">
+  	 		and user_id <![CDATA[
+	    				<>
+						]]> #{uid}
+  	 	</if>
+  	 	<if test="uaccount !=null">
+  	 		and user_account =#{uaccount}
+  	 	</if>
+  	 </where>
+  		
+    </select>
+  
+
+    <select id="findUserByUaccountAndPwd" resultMap="UserResultMap" parameterType="User" >
+		    select 
+		    *
+		    from T_USER
+		    where user_account = #{uaccount,jdbcType=VARCHAR} and user_password= #{upwd,jdbcType=VARCHAR}
+    </select>
+    
+   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+     delete from T_USER
+     where user_id = #{uid,jdbcType=VARCHAR}
+   </delete>
+  
+    <!-- 根据ids删除用户 -->
+   <delete id="deleteUserByIds">
+  	 DELETE FROM t_user 
+  	 WHERE user_id IN 
+  	     <foreach collection="array" item="ids" index="index"  
+             open="(" close=")" separator=",">  
+             #{ids}
+         </foreach> 
+   </delete>
+  
+  
+  <insert id="insert" parameterType="User" >
+    insert into T_USER (user_id, user_name, user_account, 
+      user_password, user_state,user_sex,del_flg)
+    values (#{uid,jdbcType=VARCHAR}, #{uname,jdbcType=VARCHAR}, #{uaccount,jdbcType=VARCHAR}, 
+      #{upwd,jdbcType=VARCHAR}, #{ustate,jdbcType=VARCHAR}, #{user_sex,jdbcType=VARCHAR}, #{del_flg})
+  </insert>
+   
+  <update id="updateByPrimaryKey" parameterType="User" >
+    update T_USER set user_name=#{uname,jdbcType=VARCHAR},
+    user_account=#{uaccount,jdbcType=VARCHAR}, 
+    user_password=#{upwd,jdbcType=VARCHAR},
+    user_state=#{ustate,jdbcType=VARCHAR},
+    user_sex=#{user_sex,jdbcType=VARCHAR},
+    del_flg= #{del_flg}
+    where user_id = #{uid,jdbcType=VARCHAR}
+  </update>
+  
+    <!--多条件分页查询列表  -->
+	<select id="selectPageListUseDyc" parameterType="PageUtil"  resultMap="UserResultMap">
+		SELECT TOP ${rows}  * FROM T_USER
+			<where>
+				<if test="entity!=null">
+					<!--根据账号查询  -->
+					<if test="entity.uaccount !=null ">
+						AND user_account LIKE #{entity.uaccount}			
+					</if>
+				</if>
+				AND  user_account !='Root'
+				AND USER_ID NOT IN(SELECT TOP ${start} USER_ID FROM T_USER
+					<where>
+						<if test="entity!=null">
+							<!--根据账号查询  -->
+							<if test="entity.uaccount !=null ">
+								AND user_account LIKE #{entity.uaccount}			
+							</if>
+						</if>
+						AND  user_account !='Root'
+					</where>
+				 )
+			</where>
+	</select>
+
+	<!--多条件分页查询总数  -->
+	<select id="selectPageCountUseDyc" parameterType="PageUtil" resultType="Integer">
+			SELECT COUNT(1) FROM T_USER 
+				<where>
+					<if test="entity!=null">
+						<!--根据账号查询  -->
+						<if test="entity.uaccount !=null ">
+							AND user_account LIKE #{entity.uaccount}			
+						</if>
+				</if>
+				AND  user_account !='Root'
+			</where>
+			
+	</select>
+  
+</mapper>

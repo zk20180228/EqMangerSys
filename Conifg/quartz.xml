@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- 配置Job的bean -->
+	<bean id="myJob" class="com.zkhv.utils.MyJob" />
+	<!-- 定时任务1 定时同步排班表 -->
+    <bean id="adjustJobDetail1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject">
+	    	<ref bean="myJob"/>
+	    </property>
+	    <property name="targetMethod">
+	    	<value>run1</value>
+	    </property>
+	     <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+         <property name="concurrent" value="false"/>  
+    </bean>
+    
+    <bean id="adjustTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+	       <property name="jobDetail">
+	       		<ref bean="adjustJobDetail1"/>
+	       </property>  
+	       <property name="cronExpression">
+	       <value> 0 0 0/4 * * ?</value><!-- 配置时间 4小时一次 -->
+	       </property>
+	</bean>
+	<!-- 定时任务2 定时同步患者表 -->
+	<bean id="adjustJobDetail2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject">
+	    	<ref bean="myJob"/>
+	    </property>
+	    <property name="targetMethod">
+	    	<value>run2</value>
+	    </property>
+	     <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+         <property name="concurrent" value="false"/>  
+    </bean>
+	<bean id="adjustTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+	       <property name="jobDetail">
+	       		<ref bean="adjustJobDetail2"/>
+	       </property>  
+	       <property name="cronExpression">
+	       <value>0 */1 * * * ?</value> <!-- 每隔1分钟触发一次 -->  
+	       </property>
+	</bean>
+	<!-- 定时任务3 定时同步手术室表 -->
+	<bean id="adjustJobDetail3" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject">
+	    	<ref bean="myJob"/>
+	    </property>
+	    <property name="targetMethod">
+	    	<value>run3</value>
+	    </property>
+	     <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+         <property name="concurrent" value="false"/>  
+    </bean>
+	<bean id="adjustTrigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+	       <property name="jobDetail">
+	       		<ref bean="adjustJobDetail3"/>
+	       </property>  
+	       <property name="cronExpression">
+	       <value>0 0 20 * * ?</value> <!-- 每天触发一次,每天晚上八点触发  -->  
+	       </property>
+	</bean>
+	
+	<!-- 调度工厂 -->
+	<bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+	    <property name="triggers">  
+	        <list>  
+	            <ref bean="adjustTrigger1"/>
+	            <ref bean="adjustTrigger2"/>
+	            <ref bean="adjustTrigger3"/>
+	        </list>  
+	    </property>  
+	</bean>
+ 
+</beans>

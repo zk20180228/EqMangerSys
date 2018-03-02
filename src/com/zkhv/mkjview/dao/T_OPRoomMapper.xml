@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkhv.mkjview.dao.T_OPRoomMapper" >
+
+
+	<!--多条件分页查询 -->
+	<select id="selectPageListUseDyc" parameterType="PageUtil"  resultType="T_OPRoom">
+		SELECT TOP ${rows}  *  FROM T_OPRoom 
+			<where>
+				<if test="entity !=null">
+					<!--根据患者的名字查询  -->
+					<if test="entity.room_id !=null and entity.room_id !='' ">
+						AND ROOM_ID LIKE '%${entity.room_id}%'			
+					</if>
+					<!--根据手术室的名字查询  -->
+					<if test="entity.room_name != null and  entity.room_name != '' ">
+						AND ROOM_NAME LIKE '%${entity.room_name }%'				
+					</if>
+				</if>
+				AND ID NOT IN(SELECT TOP ${start} ID FROM T_OPRoom
+				<where>
+					<if test="entity !=null">
+					<!--根据患者的名字查询  -->
+					<if test="entity.room_id !=null and entity.room_id !='' ">
+						AND ROOM_ID LIKE '%${entity.room_id}%'			
+					</if>
+					<!--根据手术室的名字查询  -->
+					<if test="entity.room_name != null and  entity.room_name != '' ">
+						AND ROOM_NAME LIKE '%${entity.room_name }%'				
+					</if>
+				</if>
+				</where>
+				)
+			</where>
+		
+	</select>
+
+	<!--多条件分页查询总数  -->
+	<select id="selectPageCountUseDyc" parameterType="PageUtil" resultType="Integer">
+			SELECT COUNT(1) FROM T_OPRoom 
+			<where>
+				<if test="entity !=null">
+					<!--根据患者的名字查询  -->
+					<if test="entity.room_id !=null and entity.room_id !='' ">
+						AND ROOM_ID LIKE '%${entity.room_id}%'			
+					</if>
+					<!--根据手术室的名字查询  -->
+					<if test="entity.room_name != null and  entity.room_name != '' ">
+						AND ROOM_NAME LIKE '%${entity.room_name }%'				
+					</if>
+				</if>
+			</where>
+	</select>
+	
+	<select id="findAll" resultType="T_OPRoom">
+		SELECT * FROM T_OPRoom 
+	</select>
+	
+	
+</mapper>

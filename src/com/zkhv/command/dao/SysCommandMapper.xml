@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkhv.command.dao.SysCommandMapper" >
+  <resultMap id="SysCommandResultMap" type="com.zkhv.command.entity.SysCommand" >
+	    <id column="CMD_ID" property="commandId" jdbcType="VARCHAR" />
+	    <result  column="CMD_KEY"  property="commandKey"/>
+	   	<result  column="CMD_VALUE"  property="commanValue"/>
+	   	<result  column="CMD_DESC"  property="commandDesc"/>
+	   	<result  column="CMD_TYPE"  property="commandType"/>
+  </resultMap>
+  
+  
+  <select id="findAllSysCommmand" resultMap="SysCommandResultMap">
+  		select * from  T_OPCommand
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>

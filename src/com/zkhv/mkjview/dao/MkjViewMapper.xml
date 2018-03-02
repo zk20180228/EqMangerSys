@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zkhv.mkjview.dao.MkjViewMapper" >
+ 
+<!-- //根据排班ID查询手术信息 -->
+<!-- 	public List<T_OPWork> findopWorkByMkjid(String mkjid); -->
+	<select id="findopWorkByMkjid" parameterType="String" resultType="T_OPWork">
+		SELECT * FROM [dbo].[T_OPWork] where ID = #{id}
+	</select>
+
+<!-- //根据患者ID查询患者信息 -->
+<!-- 	public List<T_Patient> findopWorkByMkjid(String mkjid); -->
+	<select id="findPatientByMkjid" parameterType="Integer" resultType="T_OPPatient">
+		SELECT * FROM T_OPPatient where ID = #{id}
+	</select>
+<!--  	//查询根据医生编号查询医生 -->
+<!-- 	public T_Doctor findDoctorById(String id); -->
+	<select id="findDoctorById" parameterType="String" resultType="t_config_doctor">
+		select d.Dr_ID,d.Dr_Num,d.Dr_Name,d.Dr_Title,t.DT_Name 
+		from  t_config_doctor d  LEFT JOIN t_config_doctortitle t on d.Dr_Title=t.DT_ID 
+		where d.Dr_ID = #{id}
+	</select>
+<!--  	//根据门口机编号查询门口机 -->
+<!-- 	public T_MKJ findMkjByCode(String mkj_code); -->
+	<select id="findMkjByCode" parameterType="String" resultType="T_OPMKJ">
+		select t.*,r.ROOM_NAME from T_OPMKJ t LEFT JOIN T_OPRoom r on r.ROOM_ID=t.OPROOM_ID 
+		where MKJ_CODE = #{mkj_code}
+	</select>
+<!-- 	//根据手术室id查询本手术室患者数量 -->
+<!-- 	public Integer findPatientNum(String room_id); -->
+	<select id="findPatientNum" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM T_OPWork where ROOM_ID = #{room_id}
+	</select>
+	
+	
+	<select id="findPatientsByRoomId" parameterType="String" resultType="PatientVo">
+		SELECT
+			p.ID,
+			p.AREA_NAME,
+			p.ROOM_ID,
+			p.ROOM_NAME,
+			p.P_NAME,
+			p.P_NUM,
+			p.P_DEPT,
+			p.P_SEX,
+			p.P_OLD,
+			p.P_DIAGNOSE,
+			p.OPS_DOCTOR_ID,
+			p.OPS_DOCTOR,
+			p.OPS_MZDOCTOR,
+			p.OPS_MZDOCTOR_ID,
+			t.OPS_STATE,
+			p.OPS_ANME,
+			p.OPS_TIME,
+			p.OPS_STARTTIME,
+			p.OPS_ENDTIME,
+			p.UPDATE_TIME,
+			p.OPS_STATUS,
+			(
+				CASE OPS_STILLTIME
+				WHEN 0 THEN
+					DATEDIFF(
+						n,
+						ISNULL(p.OPS_STARTTIME, GETDATE()),
+						ISNULL(p.OPS_ENDTIME, GETDATE())
+					)
+				ELSE
+					p.OPS_STILLTIME
+				END
+			) AS OPS_STILLTIME
+		FROM
+			T_OPPatient p
+		LEFT JOIN T_OPWork t ON t.ID = p.ID
+		WHERE
+			CONVERT (VARCHAR, t.OPS_TIME, 23) = CONVERT (VARCHAR, GETDATE(), 23)
+		AND p.ROOM_ID=#{room_id}
+		AND   <![CDATA[  DATEDIFF ( n , p.UPDATE_TIME , GETDATE() )<3 ]]> 
+
+	</select>
+	
+<!-- 	//根据手术室ID查询最后一次更新的数据 -->
+<!-- 	public PatientVo findLastRecord(String id); -->
+	<select id="findLastRecord" parameterType="String" resultType="PatientVo">
+		SELECT TOP 1
+			p.ID,
+			p.AREA_NAME,
+			p.ROOM_ID,
+			p.ROOM_NAME,
+			p.P_NAME,
+			p.P_NUM,
+			p.P_DEPT,
+			p.P_SEX,
+			p.P_OLD,
+			p.P_DIAGNOSE,
+			p.OPS_DOCTOR_ID,
+			p.OPS_DOCTOR,
+			p.OPS_MZDOCTOR,
+			p.OPS_MZDOCTOR_ID,
+			t.OPS_STATE,
+			p.OPS_ANME,
+			p.OPS_TIME,
+			p.OPS_STARTTIME,
+			p.OPS_ENDTIME,
+			p.UPDATE_TIME,
+			p.OPS_STATUS,
+			(
+				CASE OPS_STILLTIME
+				WHEN 0 THEN
+					DATEDIFF(
+						n,
+						ISNULL(p.OPS_STARTTIME, GETDATE()),
+						ISNULL(p.OPS_ENDTIME, GETDATE())
+					)
+				ELSE
+					p.OPS_STILLTIME
+				END
+			) AS OPS_STILLTIME
+		FROM
+			T_OPPatient p
+		LEFT JOIN T_OPWork t ON t.ID = p.ID
+		WHERE
+			p.ROOM_ID=#{room_id}
+		ORDER BY
+			p.UPDATE_TIME DESC
+	</select>
+	
+	
+<!-- 	public List<T_Patient> findPatientByRoomId1(String id); -->
+	<select id="findPatientByRoomId1" parameterType="String" resultType="T_OPPatient">
+		SELECT * FROM T_OPPatient where ROOM_ID=#{room_id}
+	</select>
+	
+
+	<select id="findDocTitleMap" resultType="java.util.HashMap">
+		select  t.DT_ID,t.DT_Name from  t_config_doctortitle t
+	</select>
+	
+<!-- 		public List<T_ImportSet> selectAllSql(); -->
+	<select id="selectAllSql" resultType="T_OPImportSet">
+		select  * from  T_OPImportSet 
+	</select>
+<!-- 		//根据id查询sql信息 -->
+<!-- 	public T_ImportSet findSqlById(String imp_id); -->
+	<select id="findSqlById" parameterType="String" resultType="T_OPImportSet">
+		select * from T_OPImportSet where Imp_ID = #{imp_id}
+	</select>
+
+<!-- 	//修改sql信息 -->
+<!-- 	public void updateSql(T_ImportSet importSet); -->
+	<update id="updateSql" parameterType="T_OPImportSet">
+		update T_OPImportSet 
+		<set>
+			Imp_Name=#{imp_name},
+			Imp_Code=#{imp_code},
+			Imp_Field=#{imp_field},
+			Imp_TempField=#{imp_tempfield},
+			Imp_Where=#{imp_where},
+			Imp_OrderBy=#{imp_orderby},
+			Imp_Table=#{imp_table},
+			Imp_IsProcedure=#{imp_isprocedure},
+			Imp_WholeSql=#{imp_wholesql}
+		</set>
+		<where>
+			Imp_ID=#{imp_id}
+		</where>
+	</update>
+
+
+ 
+</mapper>

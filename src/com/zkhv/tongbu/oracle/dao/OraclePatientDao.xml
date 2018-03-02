@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zkhv.tongbu.oracle.dao.OraclePatientDao" >
+ 
+<!--  //	测试查询oracle表 -->
+<!-- 	public T_PAT_OPERATING findById(Integer id); -->
+	<select id="findById" parameterType="Integer" resultType="V_PAT_OPERATING">
+		select * from V_PAT_OPERATING where id = #{id}
+	</select>
+<!-- 	//查询出符合导入条件的数据（患者信息表） -->
+<!-- 	public List<T_PAT_OPERATING> findAllPatientByQuery(T_ImportSet importSet); -->
+	<select id="findAllPatientByQuery" parameterType="T_OPImportSet" resultType="V_PAT_OPERATING" statementType="STATEMENT">
+		<!-- ${imp_field}  -->
+		select 
+		${imp_tempfield} 
+		from ${imp_table}
+		<where>
+			${imp_where}
+		</where>
+		order by ${imp_orderby}
+	</select>
+<!-- 	//根据查询条件对象查询oracle(排班信息) -->
+<!-- 	public List<T_OPER_SCHEDULED_INFO> findAllWorkByQuery(T_ImportSet importSet); -->
+	<select id="findAllWorkByQuery" parameterType="T_OPImportSet" resultType="V_OPER_SCHEDULED_INFO" statementType="STATEMENT">
+		<!-- ${imp_field}  -->
+		select 
+		${imp_tempfield} 
+		from ${imp_table}
+		<where>
+			${imp_where}
+		</where>
+		order by ${imp_orderby}
+	</select>
+
+
+<!-- 	//根据查询条件对象查询oracle(手术室) -->
+<!-- 	public List<T_OPERATING_INFO> findAllOperatingByQuery(T_ImportSet importSet); -->
+	<select id="findAllOperatingByQuery" parameterType="T_OPImportSet" resultType="V_OPERATING_INFO" statementType="STATEMENT">
+		<!-- ${imp_field}  -->
+		select 
+		${imp_tempfield}
+		from ${imp_table}
+	</select>
+
+
+
+</mapper>

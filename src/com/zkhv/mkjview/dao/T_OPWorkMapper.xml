@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkhv.mkjview.dao.T_OPWorkMapper" >
+
+
+	<!--多条件分页查询列表  -->
+	<select id="selectPageListUseDyc" parameterType="PageUtil"  resultType="T_OPWork">
+		SELECT TOP ${rows}  * FROM T_OPWork
+			<where>
+				<if test="entity!=null">
+						<!--根据主刀医生查询  -->
+						<if test="entity.ops_doctor!=null and entity.ops_doctor!='' ">
+							AND OPS_DOCTOR LIKE '%${entity.ops_doctor}%'			
+						</if>
+						<!--根据手术室的名字查询  -->
+						<if test="entity.room_name != null and entity.room_name != '' ">
+							AND ROOM_NAME LIKE '%${entity.room_name }%'				
+						</if>
+						<!--根据科室查询  -->
+						<if test="entity.p_dept !=null and entity.p_dept !='' ">
+							AND P_DEPT LIKE '%${entity.p_dept}%'			
+						</if>
+						<!--大于手术时间  -->
+						<if test="entity.ops_time != null and entity.ops_time !='' ">
+							AND OPS_TIME >= #{entity.ops_time}				
+						</if>
+						<if test="entity.selectEndTime != null and entity.selectEndTime !=''">
+								AND OPS_TIME <![CDATA[
+			    				<=
+								]]> #{entity.selectEndTime}				
+						</if>
+				 </if>
+				AND ID NOT IN(SELECT TOP ${start} ID FROM T_OPWork
+					<where>
+						<if test="entity!=null">
+							<!--根据主刀医生查询  -->
+							<if test="entity.ops_doctor!=null and entity.ops_doctor!='' ">
+								AND OPS_DOCTOR LIKE '%${entity.ops_doctor}%'			
+							</if>
+							<!--根据手术室的名字查询  -->
+							<if test="entity.room_name != null and entity.room_name != '' ">
+								AND ROOM_NAME LIKE '%${entity.room_name }%'				
+							</if>
+							<!--根据科室查询  -->
+							<if test="entity.p_dept !=null and entity.p_dept !='' ">
+								AND P_DEPT LIKE '%${entity.p_dept}%'			
+							</if>
+							<!--大于手术时间  -->
+							<if test="entity.ops_time != null and entity.ops_time !='' ">
+								AND OPS_TIME >= #{entity.ops_time}				
+							</if>
+							<if test="entity.selectEndTime != null and entity.selectEndTime !=''">
+									AND OPS_TIME <![CDATA[
+				    				<=
+									]]> #{entity.selectEndTime}				
+							</if>
+					    </if>
+					</where>
+				ORDER BY  OPS_TIME  DESC,P_DEPT ASC,P_NUM ASC )
+			</where>
+				ORDER BY  OPS_TIME  DESC,P_DEPT ASC,P_NUM ASC 
+	</select>
+
+	<!--多条件分页查询总数  -->
+	<select id="selectPageCountUseDyc" parameterType="PageUtil" resultType="Integer">
+			SELECT COUNT(1) FROM T_OPWork
+				<where>
+					<if test="entity!=null">
+						<!--根据主刀医生查询  -->
+						<if test="entity.ops_doctor!=null and entity.ops_doctor!='' ">
+							AND OPS_DOCTOR LIKE '%${entity.ops_doctor}%'			
+						</if>
+						<!--根据手术室的名字查询  -->
+						<if test="entity.room_name != null and entity.room_name != '' ">
+							AND ROOM_NAME LIKE '%${entity.room_name }%'				
+						</if>
+						<!--根据科室查询  -->
+						<if test="entity.p_dept !=null and entity.p_dept !='' ">
+							AND P_DEPT LIKE '%${entity.p_dept}%'			
+						</if>
+						<!--大于手术时间  -->
+						<if test="entity.ops_time != null and entity.ops_time !='' ">
+							AND OPS_TIME >= #{entity.ops_time}				
+						</if>
+						<if test="entity.selectEndTime != null and entity.selectEndTime !=''">
+								AND OPS_TIME <![CDATA[
+			    				<=
+								]]> #{entity.selectEndTime}				
+						</if>
+				    </if>
+			</where>
+			
+	</select>
+	
+	
+	<select id="select" parameterType="T_OPWork" resultType="T_OPWork">
+		SELECT * FROM 	T_OPWork  WHERE ID=#{id}
+	</select>
+	
+	
+</mapper>

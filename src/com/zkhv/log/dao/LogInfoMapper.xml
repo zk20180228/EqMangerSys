@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkhv.log.dao.LogInfoMapper" >
+
+ 	<insert id="insert" parameterType="LogInfo" >   
+ 			INSERT INTO T_OPLOG(LOGID,LOGTIME,LOGCONTENT,REMARK) VALUES (#{logId},#{logTime},#{logContent},#{remark});
+ 	</insert>
+
+  	<select id="findAll" resultType="LogInfo">
+  			SELECT * FROM T_OPLOG
+  	</select>
+  
+  
+  
+  
+  	<!--多条件分页查询 -->
+	<select id="selectPageListUseDyc" parameterType="PageUtil"  resultType="LogInfo">
+		SELECT TOP ${rows}  *  FROM T_OPLOG 
+		 	<where>
+		 		<if test="entity!=null">
+			 		<if test="entity.log_time!=null and entity.log_time!='' ">
+			 			AND LOGCONTENT LIKE '%${entity.log_time}%'
+			 		</if>
+			 		<if test="entity.remark!=null and entity.remark!='' ">
+			 			AND REMARK LIKE '%${entity.remark}%'
+			 		</if>
+		 		</if>
+		 		AND LOGID NOT IN(SELECT TOP ${start} LOGID FROM T_OPLOG
+		 		<where>
+			 		<if test="entity!=null">
+				 		<if test="entity.log_time!=null and entity.log_time!='' ">
+				 			AND LOGCONTENT LIKE '%${entity.log_time}%'
+				 		</if>
+				 		<if test="entity.remark!=null and entity.remark!='' ">
+				 			AND REMARK LIKE '%${entity.remark}%'
+				 		</if>
+		 			</if>
+		 		</where>
+		 		ORDER BY LOGTIME DESC)
+			</where> 
+			ORDER BY LOGTIME DESC
+	</select>
+
+	<!--多条件分页查询总数  -->
+	<select id="selectPageCountUseDyc" parameterType="PageUtil" resultType="Integer">
+			SELECT COUNT(1) FROM T_OPLOG 
+					<where>
+					 	<if test="entity!=null">
+					 		<if test="entity.log_time!=null and entity.log_time!='' ">
+					 			AND LOGCONTENT LIKE '%${entity.log_time}%'
+					 		</if>
+					 		<if test="entity.remark!=null and entity.remark!='' ">
+					 			AND REMARK LIKE '%${entity.remark}%'
+					 		</if>
+			 			</if>
+					</where> 
+	</select>
+  
+  
+  
+  
+</mapper>

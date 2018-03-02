@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkhv.equipment.dao.EquipmentMapper" >
+  <resultMap id="EquipmentResultMap" type="com.zkhv.equipment.entity.Equipment" >
+    <id column="id" property="eid" jdbcType="VARCHAR" />
+   <!--  <result column="ename" property="ename" jdbcType="VARCHAR" /> -->
+    <result column="mkj_ip" property="eip" jdbcType="VARCHAR" />
+    <result column="mkj_status" property="estate" jdbcType="VARCHAR" />
+    <result column="MKJ_DESCRIPTION" property="edesc" jdbcType="VARCHAR" />
+     <result column="mkj_onoff_flag" property="trimingON_OFF"  />
+     <result column="mkj_onoff_time" property="offTime" jdbcType="VARCHAR" />
+     <result column="mkj_page_url" property="eurl" jdbcType="VARCHAR" />
+     <result column="mkj_pagereload_fre" property="rfCount" />
+     <result column="mkj_cutscreen_fre" property="cutScreen"/>
+     <result column="mkj_code" property="enumber"/>
+     <!-- <result column="mkj_on" property="eon" jdbcType="VARCHAR"/> -->
+     <result column="MKJ_PROMPT" property="prompt" jdbcType="VARCHAR" />
+     <result column="OPROOM_ID" property="opRoomId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="checkIpAndEnumber">
+  		<!--添加时的校验id==null  -->
+	   <if test="eid ==null">
+	   	select count(1) from T_OPMKJ where mkj_ip=#{eip} or mkj_code =#{enumber}
+	   </if>
+	    <!--修改时的校验id!=null  -->
+	    <if test="eid !=null">
+	    select count(1) from T_OPMKJ where ( mkj_ip=#{eip} or mkj_code =#{enumber} )  and id !=#{eid} 
+	    </if>
+  </sql>
+  
+
+  <select id="selectByPrimaryKey" resultMap="EquipmentResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from T_OPMKJ
+    where id = #{eid,jdbcType=VARCHAR}
+  </select>
+  
+ 
+  <select id="findAll" resultMap="EquipmentResultMap" >
+    select * from T_OPMKJ
+  </select>
+  
+  
+  <!--修改时的校验========eid有值-->
+	   <!--  select count(1) from T_MKJ where id != '025420aa3c7746568c1e4d896e29a1cf' and mkj_ip='192.168.0.222' or mkj_code ='ZD_OPS001'; -->
+   <select id="checkIsUnique" resultType="int"  parameterType="Equipment">
+	    <include refid="checkIpAndEnumber"></include>
+   </select>
+   
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_OPMKJ
+    where id = #{eid,jdbcType=VARCHAR}
+  </delete>
+  
+  <!--注释的字段未数据库不存在的字段  -->
+  <insert id="insert" parameterType="Equipment" >
+    insert into T_OPMKJ (id,<!--  ename, --> mkj_ip, 
+      mkj_status, mkj_description, mkj_code,
+      mkj_onoff_flag,mkj_onoff_time,mkj_page_url,mkj_pagereload_fre,mkj_cutscreen_fre,<!-- ,mkj_on -->
+      MKJ_PROMPT,OPROOM_ID
+      )
+    values (#{eid,jdbcType=VARCHAR},<!--  #{ename,jdbcType=VARCHAR}, --> #{eip,jdbcType=VARCHAR}, 
+      #{estate,jdbcType=VARCHAR}, #{edesc,jdbcType=VARCHAR}, #{enumber,jdbcType=VARCHAR},
+      #{trimingON_OFF},#{offTime},
+      #{eurl,jdbcType=VARCHAR},#{rfCount},
+      #{cutScreen},<!-- , #{eon} -->
+      #{prompt},#{opRoomId}
+      )
+  </insert>
+  
+  <update id="update" parameterType="Equipment">
+  		 update T_OPMKJ set <!-- ename=#{ename,jdbcType=VARCHAR}, --> mkj_ip= #{eip,jdbcType=VARCHAR}, 
+	     mkj_status=#{estate,jdbcType=VARCHAR}, mkj_description=#{edesc,jdbcType=VARCHAR}, mkj_code=#{enumber,jdbcType=VARCHAR},
+	     mkj_onoff_flag=#{trimingON_OFF},mkj_onoff_time=#{offTime},
+	     mkj_page_url=#{eurl,jdbcType=VARCHAR},mkj_pagereload_fre=#{rfCount},
+	     mkj_cutscreen_fre=#{cutScreen},<!-- ,mkj_on=#{eon,jdbcType=VARCHAR} -->
+	     MKJ_PROMPT=#{prompt},OPROOM_ID=#{opRoomId}
+	     where id = #{eid,jdbcType=VARCHAR}
+  </update>
+  
+  
+   <update id="updatePageUrl" parameterType="Equipment">
+  		 update T_OPMKJ set 
+	     mkj_page_url=#{eurl,jdbcType=VARCHAR}
+	     where id = #{eid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="editCutScreen"  parameterType="Equipment" >
+  	 	 update T_OPMKJ set 
+	     mkj_cutscreen_fre=#{cutScreen}
+	     where id = #{eid,jdbcType=VARCHAR}		
+  </update>
+  
+   <update id="updateEstate" parameterType="Equipment">
+  		 update T_OPMKJ set 
+	     mkj_status=#{estate,jdbcType=VARCHAR}
+	     where id = #{eid,jdbcType=VARCHAR}
+  </update>
+  
+  
+   <update id="editPrompt" parameterType="Equipment">
+  		 update T_OPMKJ set 
+	     MKJ_PROMPT=#{prompt,jdbcType=VARCHAR}
+	     where id = #{eid,jdbcType=VARCHAR}
+   </update>
+  
+  
+  	<!--多条件分页查询列表  -->
+	<select id="selectPageListUseDyc" parameterType="PageUtil"  resultMap="EquipmentResultMap">
+		SELECT TOP ${rows}  * FROM T_OPMKJ 
+			<where>
+				<if test="entity!=null">
+					<!--根据手术室编号查询  -->
+					<if test="entity.opRoomId !=null and entity.opRoomId !='' ">
+						AND OPROOM_ID LIKE '%${entity.opRoomId}%'			
+					</if>
+					<!--根据设备的编号查询  -->
+					<if test="entity.enumber != null and entity.enumber != '' ">
+						AND MKJ_CODE LIKE '%${entity.enumber }%'				
+					</if>
+				</if>
+				 AND ID NOT IN(SELECT TOP ${start} ID FROM T_OPMKJ 
+				 	<where>
+				 			<if test="entity!=null">
+								<!--根据手术室编号查询  -->
+								<if test="entity.opRoomId !=null and entity.opRoomId !='' ">
+									AND OPROOM_ID LIKE '%${entity.opRoomId}%'			
+								</if>
+								<!--根据设备的编号查询  -->
+								<if test="entity.enumber != null and entity.enumber != '' ">
+									AND MKJ_CODE LIKE '%${entity.enumber }%'				
+								</if>
+							</if>
+				 	</where>
+				 ORDER BY MKJ_CODE ASC)
+			</where>
+			ORDER BY MKJ_CODE ASC
+	</select>
+
+	<!--多条件分页查询总数  -->
+	<select id="selectPageCountUseDyc" parameterType="PageUtil" resultType="Integer">
+			SELECT  COUNT(1) FROM T_OPMKJ 
+				<where>
+					<if test="entity!=null">
+								<!--根据手术室编号查询  -->
+								<if test="entity.opRoomId !=null and entity.opRoomId !='' ">
+									AND OPROOM_ID LIKE '%${entity.opRoomId}%'			
+								</if>
+								<!--根据设备的编号查询  -->
+								<if test="entity.enumber != null and entity.enumber != '' ">
+									AND MKJ_CODE LIKE '%${entity.enumber }%'				
+								</if>
+					</if>
+			</where>
+	</select>
+  
+  
+  
+</mapper>

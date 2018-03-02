@@ -1,0 +1,185 @@
+*{
+	margin:0;
+	padding: 0;
+	font-family: "黑体";
+}
+.oper{
+	width: 1080px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.oper .logo{
+	height: 100px;
+	background: url("../images/tit_bg.jpg") bottom repeat-x;
+	padding-bottom: 12px;
+}
+.oper .content{
+	overflow: hidden;
+	background-color: #017e80;
+	padding-bottom: 16px;
+}
+.oper .content .title{
+	height: 186px;
+	color: #ffff33;
+	font-size: 160px;
+	background-color: #33959c;
+	padding-bottom: 5px;
+	line-height: 186px;
+	overflow: hidden;
+	text-indent: 8px;
+}
+.oper .content .title span{
+	display: inline-block;
+	float: right;
+	color: red;
+	font-size: 80px;
+	margin: 80px 10px 0 0;
+	line-height: 100px;
+}
+.oper .doc_pat{
+	width: 980px;
+	margin:0 auto;
+	overflow: hidden;
+}
+.oper .doc_pat dl{
+	border-bottom: 4px solid #fff;
+	overflow: hidden;
+}
+.oper .doc_pat dl dt{
+	width: 341px;
+	float: left;
+}
+.oper .doc_pat dl dd{
+	width: 639px;
+	float: right;
+	text-align: center;
+}
+.oper .doc_pat dt img{
+	display: block;
+	margin: 21px auto;
+	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.7);
+}
+.oper .doc_pat dl h2{
+	font-size: 150px;
+	color: #fff;
+	font-weight: normal;
+	letter-spacing: 2px;
+	margin-top: 39px;
+	line-height: 160px;
+}
+.oper .doc_pat dl h3{
+	font-size: 56px;
+	color: #fff;
+	font-weight: normal;
+	letter-spacing: 1px;
+	line-height: 120px;
+}
+.oper .doc_pat dl h4{
+	font-size: 74px;
+	color: #ffff33;
+	font-weight: normal;
+	letter-spacing: 2px;
+	line-height: 84px;
+}
+.oper .doc_pat ul{
+	height: 600px;
+	background-color: #3c9fa4;
+	overflow: hidden;
+	border-bottom: 4px solid #fff;
+	list-style-type: none;
+}
+.oper .doc_pat ul li{
+	font-size: 48px;
+	margin-left: 24px;
+	height: 72px;
+	overflow: hidden;
+}
+.oper .doc_pat i{
+	font-style: normal;
+	text-indent: 0px;
+	font-size: 50px;
+	font-weight: bold;
+}
+.oper .doc_pat ul .tit{
+	font-size: 74px;
+}
+.oper .doc_pat ul span{
+	color: #fff;
+	float:left;
+}
+.oper .doc_pat ul strong,.oper .doc_pat ul i{
+	color: #ffff33;
+	float:left;
+}
+.oper .doc_pat ul i{
+	width:660px;
+}
+.oper .doc_pat ul strong{
+	margin:0 85px; 
+	font-weight:normal;
+	font-size: 104px;
+	text-indent: 0px;
+}
+.oper .doc_pat ul span{
+	text-indent: 0px;
+}
+.oper .doc_pat ul .tit{
+	height: 156px;
+	line-height: 156px;
+}
+.oper .doc_pat ul .age{
+	margin-left: 10px;
+}
+.oper .doc_pat ul .con{
+	line-height: 72px;
+}
+.oper .doc_pat .con span{
+	width: 256px;
+	letter-spacing: 1px;
+	font-weight: bold;
+}
+
+.oper .doc_pat .con .red{
+	color: red;
+	
+}
+.oper .operbottom{
+	height: 111px;
+	overflow: hidden;
+	background: url("../images/bottom_bg.jpg") top center no-repeat;
+}
+.oper .operbottom .date{
+	width: 300px;
+	height: 90px;
+	float: right;
+	color: #fff;
+	text-indent: 2px;
+	font-size: 38px;
+	line-height: 44px;
+	overflow: hidden;
+	margin:15px 3px 0 0;
+	font-weight: bold;
+}
+.oper .operbottom .date .p1{
+	font-size: 34px;
+	width:300px;
+	overflow:hidden;
+}
+.oper .operbottom .date span{
+	float: left;
+	margin-right: 10px;
+}
+.oper .operbottom .date #hmsID{
+	float:right;
+	margin-right: 16px;
+}
+.oper .operbottom .martext{
+	width: 760px;
+	height: 90px;
+	margin-top:15px;
+	float: left;
+	line-height: 90px;
+	font-size: 50px;
+	font-weight: bold;
+	color: red;
+}

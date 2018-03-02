@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.zkhv.tongbu.sqlServer.dao.SqlServerPatientDao" >
+ 
+<!--  //	测试查询sqlserver表 -->
+<!-- 	T_Patient findById(int id);; -->
+	<select id="findById" parameterType="String" resultType="T_OPPatient">
+		SELECT * FROM T_OPPatient where ID = #{id}
+	</select>
+<!-- 		//根据排班id查询排班信息是否存在 -->
+<!-- 	public T_OPWork findWorkById(int id); -->
+	<select id="findWorkById" parameterType="String" resultType="T_OPWork">
+		SELECT * FROM T_OPWork where ID = #{id}
+	</select>
+<!-- 		//根据手术室id查询手术室是否存在 -->
+<!-- 	public T_OPRoom findRoomById(String id); -->
+	<select id="findRoomById" parameterType="String" resultType="T_OPRoom">
+		SELECT * FROM T_OPRoom where ID = #{id}
+	</select>
+	
+<!-- 		//查询sql条件表的患者信息表条件 -->
+<!-- 	public T_ImportSet findImportSetByName(String name); -->
+	<select id="findImportSetByName" parameterType="String" resultType="T_OPImportSet">
+		SELECT * FROM T_OPImportSet where Imp_Name = #{name}
+	</select>
+	
+<!-- 	//批量更新患者信息 -->
+<!-- 	public void updatePatient(List<T_Patient> upList); -->
+	<update id="updatePatient" parameterType="T_OPPatient">
+		update T_OPPatient 
+		<set>
+			AREA_NAME=#{area_name},
+			ROOM_ID=#{room_id},
+			ROOM_NAME=#{room_name},
+			P_NAME=#{p_name},
+			P_NUM=#{p_num},
+			P_DEPT=#{p_dept},
+			P_SEX=#{p_sex},
+			P_OLD=#{p_old},
+			P_DIAGNOSE=#{p_diagnose},
+			OPS_ANME=#{ops_anme},
+			OPS_DOCTOR_ID=#{ops_doctor_id},
+			OPS_DOCTOR=#{ops_doctor},
+			OPS_MZDOCTOR_ID=#{ops_mzdoctor_id},
+			OPS_MZDOCTOR=#{ops_mzdoctor},
+			OPS_TIME=#{ops_time},
+			OPS_STARTTIME=#{ops_starttime},
+			OPS_STILLTIME=#{ops_stilltime},
+			OPS_ENDTIME=#{ops_endtime},
+			OPS_STATUS=#{ops_status},
+			UPDATE_TIME=#{update_time}
+		</set>
+		<where>
+			ID=#{id}
+		</where>
+	</update>
+
+
+<!-- 	//批量删除患者信息 -->
+<!-- 	void deletePatient(List<T_Patient> delList); -->
+	<delete id="deletePatient" parameterType="java.util.List">
+		delete from T_OPPatient where id in 
+		<foreach collection="list" item="patient" separator="," open="(" close=")">
+            #{patient.id}
+        </foreach>
+	</delete>
+
+<!-- 	//批量添加患者信息 -->
+<!-- 	void insertPatient(List<T_Patient> delList); -->
+	<insert id="insertPatient" parameterType="T_OPPatient">
+		insert into T_OPPatient 
+		values 
+        	(#{id},
+        	#{area_name},
+        	#{room_id},
+        	#{room_name},
+        	#{p_name},
+        	#{p_num},
+        	#{p_dept},
+        	#{p_sex},
+        	#{p_old},
+        	#{p_diagnose},
+        	#{ops_anme},
+        	#{ops_doctor_id},
+        	#{ops_doctor},
+        	#{ops_mzdoctor_id},
+        	#{ops_mzdoctor},
+        	#{ops_time},
+        	#{ops_starttime},
+        	#{ops_stilltime},
+        	#{ops_endtime},
+        	#{ops_status},
+        	#{update_time})
+	</insert>
+
+<!-- 	//批量更新手术排班信息 -->
+<!-- 	public void updateOPWork(List<T_OPWork> upList); -->
+	<update id="updateOPWork" parameterType="T_OPWork">
+		update T_OPWork
+		<set>
+			AREA_NAME=#{area_name},
+			ROOM_ID=#{room_id},
+			ROOM_NAME=#{room_name},
+			P_NAME=#{p_name},
+			P_NUM=#{p_num},
+			P_DEPT=#{p_dept},
+			P_SEX=#{p_sex},
+			P_OLD=#{p_old},
+			P_DIAGNOSE=#{p_diagnose},
+			OPS_ANME=#{ops_anme},
+			OPS_DOCTOR_ID=#{ops_doctor_id},
+			OPS_DOCTOR=#{ops_doctor},
+			OPS_MZDOCTOR_ID=#{ops_mzdoctor_id},
+			OPS_MZDOCTOR=#{ops_mzdoctor},
+			OPS_TIME=#{ops_time},
+			OPS_STATE=#{ops_state},
+			UPDATE_TIME=#{update_time}
+		</set>
+		<where>
+			ID=#{id}
+		</where>
+	
+	</update>
+
+<!-- 	//批量删除手术排班信息 -->
+<!-- 	void deleteOPWork(List<T_OPWork> delList); -->
+	<delete id="deleteOPWork" parameterType="java.util.List">
+		delete from T_OPWork where id in 
+		<foreach collection="list" item="opwork" separator="," open="(" close=")">
+            #{opwork.id}
+        </foreach>
+	</delete>
+<!-- 	//批量添加手术排班信息 -->
+<!-- 	void insertOPWork(T_OPWork delList); -->
+	<insert id="insertOPWork" parameterType="T_OPWork">
+		insert into T_OPWork
+		values
+        	(#{id},
+        	#{area_name},
+        	#{room_id},
+        	#{room_name},
+        	#{p_name},
+        	#{p_num},
+        	#{p_dept},
+        	#{p_sex},
+        	#{p_old},
+        	#{p_diagnose},
+        	#{ops_anme},
+        	#{ops_doctor_id},
+        	#{ops_doctor},
+        	#{ops_mzdoctor_id},
+        	#{ops_mzdoctor},
+        	#{ops_time},
+        	#{ops_state},
+        	#{update_time})
+	</insert>
+	
+<!-- 		//直接删除手术室信息 -->
+<!-- 	public void deleteOPRoom(); -->
+	<delete id="deleteOPRoom">
+		truncate table T_OPRoom
+	</delete>
+
+
+<!-- 	//批量增加手术室信息 -->
+<!-- 	public void insertOprooms(List<T_OPRoom> opRooms); -->
+	<insert id="insertOprooms" parameterType="T_OPRoom">
+		insert into T_OPRoom
+		values
+        	(#{id},
+        	#{area_name},
+        	#{room_id},
+        	#{room_name},
+        	#{update_time})
+	</insert>
+<!-- 	//更新sql条件表 -->
+<!-- 	public void updateImportSet(T_ImportSet t); -->
+	<update id="updateImportSet" parameterType="T_OPImportSet">
+		update T_OPImportSet 
+		<set>
+			Imp_StartTime=#{imp_starttime},
+			Imp_EndTime=#{imp_endtime},
+			Imp_Count=#{imp_count}
+		</set>
+		<where>
+			Imp_ID=#{imp_id}
+		</where>
+	</update>
+	
+</mapper>

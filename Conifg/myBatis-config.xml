@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<!--单独起别名  -->
+		<typeAlias alias="Equipment"  type="com.zkhv.equipment.entity.Equipment"/>
+		<typeAlias alias="User"  type="com.zkhv.user.entity.User"/>
+		<typeAlias alias="t_oproom" type="com.zkhv.mkjview.entity.T_OPRoom"/>
+		<typeAlias alias="t_opwork" type="com.zkhv.mkjview.entity.T_OPWork"/>
+		<typeAlias alias="t_oppatient" type="com.zkhv.mkjview.entity.T_OPPatient"/>
+		<typeAlias alias="t_config_doctor" type="com.zkhv.mkjview.entity.T_config_doctor"/>
+		<typeAlias alias="t_opmkj"  type="com.zkhv.mkjview.entity.T_OPMKJ"/>
+		<typeAlias alias="SysCommand"  type="com.zkhv.command.entity.SysCommand"/>
+		<typeAlias  alias="v_pat_operating"  type="com.zkhv.tongbu.oracle.entity.V_PAT_OPERATING"/>
+		<typeAlias  alias="v_operating_info"  type="com.zkhv.tongbu.oracle.entity.V_OPERATING_INFO"/>
+		<typeAlias  alias="v_oper_scheduled_info"  type="com.zkhv.tongbu.oracle.entity.V_OPER_SCHEDULED_INFO"/>
+		<typeAlias  alias="t_opimportset"  type="com.zkhv.tongbu.sqlServer.entity.T_OPImportSet"/>
+		<typeAlias alias="PatientVo"  type="com.zkhv.mkjview.entity.PatientVo"/>
+		<typeAlias alias="LogInfo" type="com.zkhv.log.entity.LogInfo"/>
+		<typeAlias  alias="PageUtil"  type="com.zkhv.utils.PageUtil"/>
+	</typeAliases>
+
+	
+	
+</configuration>
